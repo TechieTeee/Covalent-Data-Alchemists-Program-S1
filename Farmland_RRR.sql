@@ -1,5 +1,4 @@
-/*Reach*/
-
+/*Reach Farmland SQL Queries*/
 
 /*Active Addresses for Farmland*/
 SELECT  [signed_at:aggregation] as date
