@@ -106,7 +106,7 @@ AND  chain_name = 'avalanche_mainnet'
     LEFT JOIN new_users nu
         ON au.date = nu.date
 
-/*FarmLand RRR EDA - Retention - MoM Retention FarmLand & New Users*/
+/*FarmLand MoM Retention FarmLand & New Users*/
 with user_cohorts as (
     SELECT  tx_sender as address
             , min(date_trunc('month', signed_at)) as cohortMonth
@@ -152,3 +152,62 @@ LEFT JOIN cohort_size s
 	ON r.cohortMonth = s.cohortMonth
 WHERE r.month_number != 0
 ORDER BY r.cohortMonth, r.month_number
+
+
+/*Farmland Revenue*/
+
+/*Average Gas Cost Avalanche & FarmLand*/
+SELECT [signed_at:aggregation] as date
+       , avg((tx.tx_gas_spent/pow(10, 18))* toFloat64(tx.tx_gas_price)) as average_gas_cost
+       --, sum((tx.tx_gas_spent/pow(10, 18))* toFloat64(tx.tx_gas_price)) as aggregate_gas_cost
+FROM ( 
+            SELECT any(tx_hash), tx_gas_spent, tx_gas_price, signed_at
+        FROM blockchains.all_chains 
+          WHERE chain_name = 'avalanche_mainnet'
+          and tx_recipient = unhex('00f5D01D86008D14d04E29EFe88DffC75a9cAc47')
+          AND [signed_at:daterange]
+            GROUP BY tx_gas_spent, tx_gas_price, signed_at
+    ) tx
+
+ GROUP BY date
+ 
+ /*Total Gas Weekly Avalanche & FarmLand*/
+ SELECT [signed_at:aggregation] as date
+       --, avg((tx.tx_gas_spent/pow(10, 18))* toFloat64(tx.tx_gas_price)) as average_gas_cost
+       ,sum((tx.tx_gas_spent/pow(10, 18))* toFloat64(tx.tx_gas_price)) as aggregate_gas_cost
+FROM ( 
+            SELECT any(tx_hash), tx_gas_spent, tx_gas_price, signed_at
+        FROM blockchains.all_chains 
+          WHERE chain_name = 'avalanche_mainnet'
+          and tx_recipient = unhex('00f5D01D86008D14d04E29EFe88DffC75a9cAc47')
+          AND [signed_at:daterange]
+            GROUP BY tx_gas_spent, tx_gas_price, signed_at
+    ) tx
+
+ GROUP BY date
+ 
+ /*AVAX Gas Per Active Addresses for FarmLand*/
+ with total as (SELECT [signed_at:aggregation] as date
+       --, avg((tx.tx_gas_spent/pow(10, 18))* toFloat64(tx.tx_gas_price)) as average_gas_cost
+       ,sum((tx.tx_gas_spent/pow(10, 18))* toFloat64(tx.tx_gas_price)) as aggregate_gas_cost
+FROM ( 
+            SELECT any(tx_hash), tx_gas_spent, tx_gas_price, signed_at
+        FROM blockchains.all_chains 
+          WHERE chain_name = 'avalanche_mainnet'
+          and tx_recipient = unhex('00f5D01D86008D14d04E29EFe88DffC75a9cAc47')
+          AND [signed_at:daterange]
+            GROUP BY tx_gas_spent, tx_gas_price, signed_at
+    ) tx
+ GROUP BY date),
+
+active as (SELECT  [signed_at:aggregation] as date
+        , uniq(tx_sender) AS Active_Addresses
+FROM blockchains.all_chains 
+WHERE tx_recipient = unhex('00f5D01D86008D14d04E29EFe88DffC75a9cAc47')
+        AND [signed_at:daterange]
+        AND chain_name = 'avalanche_mainnet'
+GROUP BY date
+ORDER BY date desc)
+
+select total.date, Active_Addresses, aggregate_gas_cost, aggregate_gas_cost/Active_Addresses as gas_per_active
+from active join total on total.date=active.date
