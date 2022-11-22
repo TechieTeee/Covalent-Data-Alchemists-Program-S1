@@ -1,4 +1,7 @@
-#Active Addresses for Vending Machines NFT
+/*Vending Machines NFTs Reach, Retention and Revenue SQL Queries*/
+
+/*#Active Addresses for Vending Machines NFTs*/
+
 
 SELECT  [signed_at:aggregation] as date
         , uniq(tx_sender) AS active_addresses
