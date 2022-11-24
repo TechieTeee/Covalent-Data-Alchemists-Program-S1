@@ -1,5 +1,6 @@
 /*Vending Machines NFTs Reach, Retention and Revenue SQL Queries*/
 
+
 /*#Reach for Vending Machines*/
 
 /*#Active Addresses for Vending Machines NFTs*/
