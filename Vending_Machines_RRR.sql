@@ -158,3 +158,62 @@ LEFT JOIN cohort_size s
 WHERE r.month_number != 0
 ORDER BY r.cohortMonth, r.month_number
 
+
+
+/*#Revenue Vending Machines NFTs*/
+
+/*#Vending Machine NFTs Average Gas Prices*/
+SELECT [signed_at:aggregation] as date
+       , avg((tx.tx_gas_spent/pow(10, 18))* toFloat64(tx.tx_gas_price)) as average_gas_cost
+       --, sum((tx.tx_gas_spent/pow(10, 18))* toFloat64(tx.tx_gas_price)) as aggregate_gas_cost
+FROM ( 
+            SELECT any(tx_hash), tx_gas_spent, tx_gas_price, signed_at
+        FROM blockchains.all_chains 
+          WHERE chain_name = 'avalanche_mainnet'
+          and tx_recipient = unhex('BbD9786f178e2AEBb4b4329c41A821921ca05339')
+          AND [signed_at:daterange]
+            GROUP BY tx_gas_spent, tx_gas_price, signed_at
+    ) tx
+
+ GROUP BY date
+ 
+ /*#Total Gas Weekly AVAX & Vending Machine NFTs*/
+ SELECT [signed_at:aggregation] as date
+       --, avg((tx.tx_gas_spent/pow(10, 18))* toFloat64(tx.tx_gas_price)) as average_gas_cost
+       ,sum((tx.tx_gas_spent/pow(10, 18))* toFloat64(tx.tx_gas_price)) as aggregate_gas_cost
+FROM ( 
+            SELECT any(tx_hash), tx_gas_spent, tx_gas_price, signed_at
+        FROM blockchains.all_chains 
+          WHERE chain_name = 'avalanche_mainnet'
+          and tx_recipient = unhex('BbD9786f178e2AEBb4b4329c41A821921ca05339')
+          AND [signed_at:daterange]
+            GROUP BY tx_gas_spent, tx_gas_price, signed_at
+    ) tx
+
+ GROUP BY date
+ 
+ /*#Gas Per Active Address for Vending Machines*/
+ with total as (SELECT [signed_at:aggregation] as date
+       --, avg((tx.tx_gas_spent/pow(10, 18))* toFloat64(tx.tx_gas_price)) as average_gas_cost
+       ,sum((tx.tx_gas_spent/pow(10, 18))* toFloat64(tx.tx_gas_price)) as aggregate_gas_cost
+FROM ( 
+            SELECT any(tx_hash), tx_gas_spent, tx_gas_price, signed_at
+        FROM blockchains.all_chains 
+          WHERE chain_name = 'avalanche_mainnet'
+          and tx_recipient = unhex('BbD9786f178e2AEBb4b4329c41A821921ca05339')
+          AND [signed_at:daterange]
+            GROUP BY tx_gas_spent, tx_gas_price, signed_at
+    ) tx
+ GROUP BY date),
+
+active as (SELECT  [signed_at:aggregation] as date
+        , uniq(tx_sender) AS Active_Addresses
+FROM blockchains.all_chains 
+WHERE tx_recipient = unhex('BbD9786f178e2AEBb4b4329c41A821921ca05339')
+        AND [signed_at:daterange]
+        AND chain_name = 'avalanche_mainnet'
+GROUP BY date
+ORDER BY date desc)
+
+select total.date, Active_Addresses, aggregate_gas_cost, aggregate_gas_cost/Active_Addresses as gas_per_active
+from active join total on total.date=active.date
