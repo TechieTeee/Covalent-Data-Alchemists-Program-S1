@@ -1,4 +1,7 @@
+/*DEX RRR Trader Joe & WAVAX: USDC, BTC, ETH, Joe & Egg*/
 
+
+/*Trader Count Avax: USDC, BTC, ETH, Joe & Egg*/
 SELECT  [signed_at:aggregation] as date
   , uniq(sender) AS active_addresses
   , sum(active_addresses) OVER (ORDER BY date) as total_addresses
@@ -32,3 +35,6 @@ FROM reports.dex
     AND version = 1
 GROUP BY date, pair, aggregator
 ORDER BY date, pair desc
+
+
+
