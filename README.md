@@ -163,3 +163,6 @@ loyalty to the liquidity pool.
 WAVAX/USDC and JOE/WAVAX did not have the most stickiness among the
 liquidity pools, however, they were among the most stable in the
 liquidity pool group.
+
+
+##Week 3
