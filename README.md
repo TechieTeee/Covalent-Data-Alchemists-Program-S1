@@ -165,4 +165,5 @@ liquidity pools, however, they were among the most stable in the
 liquidity pool group.
 
 
-##Week 3
+## Week 3
+RRR Analysis for NFTrade NFT Market Place
