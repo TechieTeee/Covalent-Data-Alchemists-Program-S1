@@ -169,5 +169,3 @@ liquidity pool group.
 RRR Analysis for NFTrade NFT Market Place and How Market Place Activity Impacts NFT projects
 
 ## REACH
-
-
