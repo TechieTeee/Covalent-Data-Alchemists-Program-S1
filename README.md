@@ -1,5 +1,10 @@
 # Covalent Data Alchemists Program
 
+![image](https://user-images.githubusercontent.com/100870737/206830833-54a25f53-e910-4b22-b5ee-ae75d9481329.png)
+
+https://opensea.io/assets/matic/0x2953399124f0cbb46d2cbacd8a89cf0599974963/76538441175747641219265072182160044491633700610231652884771900172275155992577/
+
+
 Repo to keep track of progress in the program
 
 # Week 1: RRR Analysis Farmland and Vending Machines Projects on Avalanche
