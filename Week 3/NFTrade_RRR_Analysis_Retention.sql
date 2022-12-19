@@ -91,7 +91,7 @@ AND [cohortMonth:daterange]
 ORDER BY r.cohortMonth, r.month_number
 
 
-/*NFTrade Vlme Distribution v.s. Competitors*/
+/*NFTrade Volume Distribution v.s. Competitors*/
 with cte1 as (
 SELECT maker as wallet
   FROM reports.nft_sales_all_chains
