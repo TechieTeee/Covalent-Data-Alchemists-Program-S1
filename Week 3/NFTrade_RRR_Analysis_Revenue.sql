@@ -52,3 +52,26 @@ and market = 'nftrade'
 AND signed_at > now() - interval '30 day'
 and collection_name != ''  
 GROUP BY date, collection_name
+
+
+/*NFTrade Sales Market Share (AVAX)*/
+with cte1 as (
+SELECT sum(nft_token_price_usd) as volume
+      , [signed_at:aggregation] as date 
+FROM reports.nft_sales_all_chains
+WHERE chain_name = 'avalanche_mainnet'
+AND market = 'nftrade'
+AND [signed_at:daterange]
+GROUP BY date
+),
+cte2 as (
+SELECT sum(nft_token_price_usd) as volume
+      , [signed_at:aggregation] as date 
+FROM reports.nft_sales_all_chains
+WHERE chain_name = 'avalanche_mainnet'
+AND [signed_at:daterange]
+GROUP BY date
+)
+SELECT cte2.date,
+cte1.volume/cte2.volume AS sales_marketshare
+FROM cte2 JOIN cte1 ON cte2.date=cte1.date
