@@ -116,3 +116,52 @@ FROM cte2 JOIN cte1 ON cte1.date=cte2.date
 GROUP BY final_date, volume
 ORDER BY final_date ASC 
 )
+
+
+/*NFTrade % of Sales from Whales (USDC:AVAX)*/
+WITH wallet_list AS (
+  SELECT count, taker as wallet
+  FROM(
+      SELECT count(tx_hash) as count, taker
+      FROM reports.nft_sales_all_chains
+      WHERE [chain_name:chainname]
+      GROUP BY taker
+      ORDER BY count DESC
+  ) x
+  INNER JOIN (
+      SELECT quantile(0.99)(count) as quartile
+      FROM (
+            SELECT count(tx_hash) as count, taker
+            FROM reports.nft_sales_all_chains
+            WHERE [chain_name:chainname]
+            GROUP BY taker
+            ORDER BY count DESC
+          )
+  ) y
+  ON 1=1
+  WHERE count > quartile
+),
+market AS (
+  SELECT [signed_at:aggregation] as date
+         , sum(nft_token_price_usd) as volume
+  FROM reports.nft_sales_all_chains  
+  WHERE [chain_name:chainname]
+  AND market = 'nftrade'
+  AND [signed_at:daterange]
+  GROUP BY date
+),
+wallet_volume AS (
+  SELECT [signed_at:aggregation] as date
+         ,sum(nft_token_price_usd) as volume
+  FROM reports.nft_sales_all_chains
+    INNER JOIN wallet_list
+      ON wallet_list.wallet = nft_sales_all_chains.taker
+  WHERE [chain_name:chainname]
+  AND market = 'nftrade'
+  AND [signed_at:daterange]
+  GROUP BY date
+)
+SELECT market.date, wallet_volume.volume/market.volume as "Percentage"
+FROM market
+  INNER JOIN wallet_volume
+    ON market.date = wallet_volume.date
