@@ -103,4 +103,3 @@ and market = 'nftrade'
 AND [signed_at:daterange] 
 GROUP BY date
 ORDER BY date desc
-
