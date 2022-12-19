@@ -89,3 +89,23 @@ LEFT JOIN cohort_size s
 WHERE r.month_number != 0
 AND [cohortMonth:daterange]
 ORDER BY r.cohortMonth, r.month_number
+
+
+/*NFTrade Vlme Distribution v.s. Competitors*/
+with cte1 as (
+SELECT maker as wallet
+  FROM reports.nft_sales_all_chains
+  WHERE chain_name = 'avalanche_mainnet'
+  AND market = 'nftrade'
+  AND [signed_at:daterange]
+  
+)
+  SELECT 
+  sum(nft_token_price_usd) as volume
+      , [signed_at:aggregation] as date
+      , market
+FROM reports.nft_sales_all_chains sales INNER JOIN cte1 ON sales.maker=cte1.wallet
+where chain_name = 'avalanche_mainnet'
+AND [signed_at:daterange]
+GROUP BY date, market
+HAVING volume IS NOT NULL AND volume !=0
