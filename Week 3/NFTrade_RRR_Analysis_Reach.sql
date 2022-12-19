@@ -85,3 +85,22 @@ where chain_name = 'avalanche_mainnet'
 and market = 'nftrade'
 and [signed_at:daterange]
 GROUP BY date
+
+
+/*NFTrade Buyers and Sellers (AVAX)*/
+SELECT [signed_at:aggregation] as date, uniq(maker) as addresses, 'sellers' as type
+FROM reports.nft_sales_all_chains
+where chain_name = 'avalanche_mainnet'
+and market = 'nftrade'
+AND [signed_at:daterange]                                 
+GROUP BY date
+ORDER BY date desc
+UNION ALL 
+SELECT [signed_at:aggregation] as date, uniq(taker) as addresses, 'buyers' as type
+FROM reports.nft_sales_all_chains
+where chain_name = 'avalanche_mainnet'
+and market = 'nftrade'
+AND [signed_at:daterange] 
+GROUP BY date
+ORDER BY date desc
+
