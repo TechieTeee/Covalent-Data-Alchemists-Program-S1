@@ -39,3 +39,16 @@ AND [signed_at:daterange]
 GROUP BY date
 ORDER BY date ASC 
 )
+
+
+/*NFTrade Sales Vlme By Collection Last 30 Days*/
+/*Avalanche Main Net*/
+SELECT sum(nft_token_price_usd) as volume
+      , [signed_at:aggregation] as date 
+      , collection_name
+FROM reports.nft_sales_all_chains
+where chain_name = 'avalanche_mainnet'
+and market = 'nftrade'
+AND signed_at > now() - interval '30 day'
+and collection_name != ''  
+GROUP BY date, collection_name
