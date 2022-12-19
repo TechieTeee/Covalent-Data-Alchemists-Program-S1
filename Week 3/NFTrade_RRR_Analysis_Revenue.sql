@@ -23,3 +23,19 @@ AND [signed_at:daterange]
 GROUP BY date
 ORDER BY date ASC 
     )
+
+
+/*NFTrade Sales Volume in USD & Growth Rate*/
+/*Avalanche Main Net*/
+SELECT date, volume, (volume/previous)-1 as growth_rate
+FROM(
+SELECT [signed_at:aggregation] as date
+       , sum(nft_token_price_usd) as volume 
+       , lagInFrame(volume) OVER (ORDER BY date) as previous
+FROM reports.nft_sales_all_chains  
+WHERE chain_name = 'avalanche_mainnet'
+AND market = 'nftrade'
+AND [signed_at:daterange]
+GROUP BY date
+ORDER BY date ASC 
+)
