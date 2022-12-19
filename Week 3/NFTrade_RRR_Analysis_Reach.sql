@@ -75,3 +75,13 @@ SELECT t2.date as date,
 FROM chain_users t2 JOIN market_users t1 ON t1.date=t2.date
 GROUP BY date,a,b
 ORDER BY date
+
+
+/*NFTrade Sales Numbers Over Time*/
+SELECT  [signed_at:aggregation] as date
+        , count(tx_hash) as NFT_sales
+FROM reports.nft_sales_all_chains
+where chain_name = 'avalanche_mainnet'
+and market = 'nftrade'
+and [signed_at:daterange]
+GROUP BY date
