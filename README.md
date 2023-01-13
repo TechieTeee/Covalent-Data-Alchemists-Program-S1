@@ -173,4 +173,8 @@ liquidity pool group.
 
 ## WEEK 3
 RRR (Reach, Retention and Revenue) Analysis for NFTrade NFT Market Place and How Market Place Activity Impacts NFT projects
+Write up was completed with a required Twitter or blog thread.
 
+
+## WEEK 4
+Original schedule was changed to accomodate the change in the start date.
