@@ -1,13 +1,13 @@
-/*REACH*/
+--REACH
 
-/*Top NFT Marketplaces*/
+--Top NFT Marketplaces
 SELECT count(*) as count, market 
 FROM reports.nft_sales_all_chains 
 GROUP BY market 
 ORDER BY count DESC
 
 
-/*NFTrade Sales By Collection (AVAX)*/
+--NFTrade Sales By Collection (AVAX)
 SELECT  [signed_at:aggregation] as date
         , count(tx_hash) as NFT_sales,
         collection_name
@@ -19,7 +19,7 @@ and [signed_at:daterange]
 GROUP BY date, collection_name
 
 
-/*NFTrade Sales By Collection (AVAX)*/
+--NFTrade Sales By Collection (AVAX)
 SELECT  [signed_at:aggregation] as date
         , count(tx_hash) as NFT_sales,
         collection_name
@@ -31,7 +31,7 @@ and [signed_at:daterange]
 GROUP BY date, collection_name
 
 
-/*NFTrade User Market Share (AVAX)*/
+--NFTrade User Market Share (AVAX)
 with market_users as ( 
         SELECT [signed_at:aggregation] as date
        , uniq(addresses) AS active_market_users
@@ -77,7 +77,7 @@ GROUP BY date,a,b
 ORDER BY date
 
 
-/*NFTrade Sales Numbers Over Time*/
+--NFTrade Sales Numbers Over Time
 SELECT  [signed_at:aggregation] as date
         , count(tx_hash) as NFT_sales
 FROM reports.nft_sales_all_chains
@@ -87,7 +87,7 @@ and [signed_at:daterange]
 GROUP BY date
 
 
-/*NFTrade Buyers and Sellers (AVAX)*/
+--NFTrade Buyers and Sellers (AVAX)
 SELECT [signed_at:aggregation] as date, uniq(maker) as addresses, 'sellers' as type
 FROM reports.nft_sales_all_chains
 where chain_name = 'avalanche_mainnet'
