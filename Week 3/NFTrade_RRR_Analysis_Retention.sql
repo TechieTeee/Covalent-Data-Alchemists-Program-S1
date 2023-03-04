@@ -1,7 +1,7 @@
-/*RETENTION ANALYSIS*/
+--RETENTION ANALYSIS
 
 
-/*NFTrade Buyer Retention (AVAX)*/
+--NFTrade Buyer Retention (AVAX)
 WITH user_cohorts as (
     SELECT  taker as address
             , min(date_trunc('month', signed_at)) as cohortMonth
@@ -46,7 +46,7 @@ AND [cohortMonth:daterange]
 ORDER BY r.cohortMonth, r.month_number
 
 
-/*NFTrade Seller Retention (AVAX)*/
+--NFTrade Seller Retention (AVAX)
 WITH user_cohorts as (
     SELECT  maker as address
             , min(date_trunc('month', signed_at)) as cohortMonth
@@ -91,7 +91,7 @@ AND [cohortMonth:daterange]
 ORDER BY r.cohortMonth, r.month_number
 
 
-/*NFTrade Volume Distribution v.s. Competitors*/
+--NFTrade Volume Distribution v.s. Competitors
 with cte1 as (
 SELECT maker as wallet
   FROM reports.nft_sales_all_chains
