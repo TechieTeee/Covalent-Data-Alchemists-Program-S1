@@ -1,7 +1,7 @@
-/*DEX RRR Trader Joe & WAVAX: USDC, BTC, ETH, Joe & Egg*/
+--DEX RRR Trader Joe & WAVAX: USDC, BTC, ETH, Joe & Egg
 
-/*REACH*/
-/*Trader Count Avax: USDC, BTC, ETH, Joe & Egg*/
+--REACH
+--Trader Count Avax: USDC, BTC, ETH, Joe & Egg
 SELECT  [signed_at:aggregation] as date
   , uniq(sender) AS active_addresses
   , sum(active_addresses) OVER (ORDER BY date) as total_addresses
@@ -37,7 +37,7 @@ GROUP BY date, pair, aggregator
 ORDER BY date, pair desc
 
 
-/*# of Trades Avax: USDC, BTC, ETH, Joe & Egg*/
+--# of Trades Avax: USDC, BTC, ETH, Joe & Egg
 SELECT  [signed_at:aggregation] as date
   , uniq(sender) AS active_addresses
   , sum(active_addresses) OVER (ORDER BY date) as total_addresses
@@ -72,7 +72,7 @@ GROUP BY date, pair, aggregator
 ORDER BY date, pair desc
 
 
-/*# of New Trades: USDC, BTC, ETH, Joe & Egg*/
+--# of New Trades: USDC, BTC, ETH, Joe & Egg
 WITH active_addresses AS (
   SELECT signed_at
     , sender as address
@@ -109,9 +109,9 @@ GROUP BY date, pair
 ORDER BY date, pair desc
 
 
-/*RETENTION*/
+--RETENTION
 
-/*Mint to Burn Ratio: Market Price (JOE/WAVAX)*/
+--Mint to Burn Ratio: Market Price (JOE/WAVAX)
 with mint as (
   SELECT [signed_at:aggregation] as date, sum(amount0_unscaled) as amount
   FROM reports.dex
@@ -143,7 +143,7 @@ price as (
 )
 
 
-/*Cohort Retention (WAVAX/USDC)*/
+--Cohort Retention (WAVAX/USDC)
 with user_cohorts as (
     SELECT  sender as address
             , min(date_trunc('month', signed_at)) as cohortMonth
@@ -186,7 +186,7 @@ LEFT JOIN cohort_size s
 WHERE r.month_number != 0
 ORDER BY r.cohortMonth, r.month_number
 
-/*Cohort Retention (JOE/WAVAX)*/
+--Cohort Retention (JOE/WAVAX)
 with user_cohorts as (
     SELECT  sender as address
             , min(date_trunc('month', signed_at)) as cohortMonth
@@ -286,9 +286,9 @@ ORDER BY date, pair
 
 
 
-/*Revenue*/
+--Revenue
 
-/*Pools Volume: Avax: USDC, BTC, ETH, Joe & Egg*/
+--Pools Volume: Avax: USDC, BTC, ETH, Joe & Egg
 SELECT sum(abs(amount0_unscaled)/power(10, prices.num_decimals)*prices.price_in_usd) as Volume
   , [signed_at:aggregation] as date
   --, sum(Volume) OVER (ORDER BY date) as cum_vol
@@ -322,7 +322,7 @@ LEFT JOIN (
 GROUP BY date, pair
 ORDER BY date, pair asc
 
-/*Median Liquidity Added/Time Trader Joe*/
+--Median Liquidity Added/Time Trader Joe
 SELECT quantile(abs(amount0_unscaled)/power(10, prices0.num_decimals)*prices0.price_in_usd) as median_Token0
   , quantile(abs(amount1_unscaled)/power(10, prices1.num_decimals)*prices1.price_in_usd) as median_Token1
   , median_Token0 + median_Token1 as median_added_liquidity
@@ -365,7 +365,7 @@ ORDER BY date, pair
 UNION ALL
 
 
-/*Millionaire Transfer Volume WAVAX*/
+--Millionaire Transfer Volume WAVAX
 SELECT extract_address(hex(e.topic1)) as wallet
 			 , sum(prices.price_in_usd * to_float64_raw(data0)/ pow(10, prices.num_decimals)) as amount_transfered
 FROM blockchains.all_chains e
@@ -385,7 +385,7 @@ HAVING amount_transfered >= 1000000
 ORDER BY amount_transfered DESC
 
 
-/*Swap VLM Dominated Hvy Dex Traders JOE/WAVAX*/
+--Swap VLM Dominated Hvy Dex Traders JOE/WAVAX
 WITH heavy_dex_traders AS (
 
 SELECT 
