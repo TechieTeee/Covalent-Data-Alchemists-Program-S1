@@ -1,6 +1,6 @@
-/*Farmland Reach SQL Queries*/
+--Farmland Reach SQL Queries
 
-/*Active Addresses for Farmland*/
+--Active Addresses for Farmland
 SELECT  [signed_at:aggregation] as date
         , uniq(tx_sender) AS active_addresses
 FROM blockchains.all_chains 
@@ -47,9 +47,9 @@ select  t.date, t.Transactions, a.Active, cast(t.Transactions/a.Active as int) a
   from t join a on t.date=a.date
 
 
-/*Farmland Retention*/
+--Farmland Retention
 
-/*Farmland Stickiness Ratio*/
+--Farmland Stickiness Ratio
 With daily_active_users as (
 SELECT date_trunc('month', day) as date, avg(active_addresses) as avg_dau
 FROM (
@@ -76,7 +76,7 @@ FROM daily_active_users daily
   	ON daily.date = monthly.date
 ORDER BY date
       
-/*Farmland New V.S. Existing Addresses*/
+--Farmland New V.S. Existing Addresses
 with user_cohorts as (
     SELECT  tx_sender as address
             , min([signed_at:aggregation]) as cohortDate
@@ -106,7 +106,7 @@ AND  chain_name = 'avalanche_mainnet'
     LEFT JOIN new_users nu
         ON au.date = nu.date
 
-/*FarmLand MoM Retention FarmLand & New Users*/
+--FarmLand MoM Retention FarmLand & New Users
 with user_cohorts as (
     SELECT  tx_sender as address
             , min(date_trunc('month', signed_at)) as cohortMonth
@@ -154,7 +154,7 @@ WHERE r.month_number != 0
 ORDER BY r.cohortMonth, r.month_number
 
 
-/*Farmland Revenue*/
+--Farmland Revenue
 
 /*Average Gas Cost Avalanche & FarmLand*/
 SELECT [signed_at:aggregation] as date
@@ -171,7 +171,7 @@ FROM (
 
  GROUP BY date
  
- /*Total Gas Weekly Avalanche & FarmLand*/
+ --Total Gas Weekly Avalanche & FarmLand
  SELECT [signed_at:aggregation] as date
        --, avg((tx.tx_gas_spent/pow(10, 18))* toFloat64(tx.tx_gas_price)) as average_gas_cost
        ,sum((tx.tx_gas_spent/pow(10, 18))* toFloat64(tx.tx_gas_price)) as aggregate_gas_cost
@@ -186,7 +186,7 @@ FROM (
 
  GROUP BY date
  
- /*AVAX Gas Per Active Addresses for FarmLand*/
+ --AVAX Gas Per Active Addresses for FarmLand
  with total as (SELECT [signed_at:aggregation] as date
        --, avg((tx.tx_gas_spent/pow(10, 18))* toFloat64(tx.tx_gas_price)) as average_gas_cost
        ,sum((tx.tx_gas_spent/pow(10, 18))* toFloat64(tx.tx_gas_price)) as aggregate_gas_cost
