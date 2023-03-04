@@ -1,7 +1,7 @@
-/*Revenue Analysis*/
+--Revenue Analysis
 
-/*NFTrade Fee Revenue Growth Rate (USDC:AVAX)*/
-/*Contract Address Used for WAVAX/USDC Conversion*/
+--NFTrade Fee Revenue Growth Rate (USDC:AVAX)
+--Contract Address Used for WAVAX/USDC Conversion
 SELECT date
        , volume
        , (volume/previous)-1 as growth_rate
@@ -25,8 +25,8 @@ ORDER BY date ASC
     )
 
 
-/*NFTrade Sales Volume in USD & Growth Rate*/
-/*Avalanche Main Net*/
+--NFTrade Sales Volume in USD & Growth Rate
+--Avalanche Main Net
 SELECT date, volume, (volume/previous)-1 as growth_rate
 FROM(
 SELECT [signed_at:aggregation] as date
@@ -41,8 +41,8 @@ ORDER BY date ASC
 )
 
 
-/*NFTrade Sales Vlme By Collection Last 30 Days*/
-/*Avalanche Main Net*/
+--NFTrade Sales Vlme By Collection Last 30 Days
+--Avalanche Main Net
 SELECT sum(nft_token_price_usd) as volume
       , [signed_at:aggregation] as date 
       , collection_name
@@ -54,7 +54,7 @@ and collection_name != ''
 GROUP BY date, collection_name
 
 
-/*NFTrade Sales Market Share (AVAX)*/
+--NFTrade Sales Market Share (AVAX)
 with cte1 as (
 SELECT sum(nft_token_price_usd) as volume
       , [signed_at:aggregation] as date 
@@ -77,8 +77,8 @@ cte1.volume/cte2.volume AS sales_marketshare
 FROM cte2 JOIN cte1 ON cte2.date=cte1.date
 
 
-/*NFTrade Revenue/User USDC & Growth Rate*/
-/*Avalanche Main Net*/
+--NFTrade Revenue/User USDC & Growth Rate
+--Avalanche Main Net
 with cte1 as (      SELECT [signed_at:aggregation] as date, uniq(taker) as buyers
                     FROM reports.nft_sales_all_chains
                     WHERE chain_name = 'avalanche_mainnet'
@@ -118,7 +118,7 @@ ORDER BY final_date ASC
 )
 
 
-/*NFTrade % of Sales from Whales (USDC:AVAX)*/
+--NFTrade % of Sales from Whales (USDC:AVAX)
 WITH wallet_list AS (
   SELECT count, taker as wallet
   FROM(
