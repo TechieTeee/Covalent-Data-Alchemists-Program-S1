@@ -1,4 +1,4 @@
-# Covalent Data Alchemists Program
+# Covalent Data Alchemists Program Season 1
 
 ![image](https://user-images.githubusercontent.com/100870737/206830833-54a25f53-e910-4b22-b5ee-ae75d9481329.png)
 ## Proof of Knowledge NFT
